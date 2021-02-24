@@ -32,7 +32,7 @@ def prepareOneBuildStage(String name) {
     stage("Build stage:${name}") {
         def myEnv = docker.build 'environment'
         myEnv.inside {
-            sh 'rake ${name}'
+            sh "rake ${name}"
         }
     }
   }

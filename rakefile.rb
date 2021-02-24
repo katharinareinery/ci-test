@@ -32,19 +32,11 @@ Build all test executables at once. Individual test cases can be built using
 task :tests => [:tinyAES, :Unity] + bin_files
 
 rule '.o' => '.c' do |task|
-  begin
     sh "#{CC} #{CFLAGS} -I#{TINYAES_DIR} -I#{UNITY_DIR} -c #{task.source} -o #{task.name}"
-  rescue
-    print "Error while building #{task.source}"
-  end
 end
 
 rule '.exe' => '.o' do |task|
-  begin
     sh "#{CC} #{CFLAGS} -I#{TINYAES_DIR} -I#{UNITY_DIR} #{tinyAES_obj_files.to_a.join(' ')} #{unity_obj_files.to_a.join(' ')} #{task.source} -o #{task.name}"
-  rescue
-    print "Error while linking #{task.source}"
-  end  
 end
 
 desc 'Create tests'
