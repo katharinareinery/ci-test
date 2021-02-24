@@ -30,8 +30,10 @@ def prepareBuildStages() {
 def prepareOneBuildStage(String name) {
   return {
     stage("Build stage:${name}") {
-      agent { dockerfile true }
-      sh(script:'rake ${name}', returnStatus:true)
+        def myEnv = docker.build 'environment'
+        myEnv.inside {
+            sh 'rake ${name}'
+        }
     }
   }
 }
