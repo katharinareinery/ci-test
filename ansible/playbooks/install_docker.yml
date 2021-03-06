@@ -1,0 +1,7 @@
+---
+
+- name: install docker
+  hosts: escrypt_test
+  gather_facts: yes
+  roles:
+    - docker

@@ -1,0 +1,52 @@
+---
+# tasks file for jenkins
+
+- name: Load OS Specific Vars
+  # include_vars fügt Datei mit Namen der Zieldistribution hinzu
+  include_vars: "{{ lookup('first_found', possible_files) }}"
+  vars:
+    possible_files:
+      - "../vars/{{ ansible_distribution }}.yml"
+  tags: [ 'install', 'prepare' ]
+
+- include_tasks: jenkins-CentOS.yml
+  when:
+    - ansible_os_family == 'RedHat'
+
+- include_tasks: jenkins-Debian.yml
+  when:
+    - ansible_os_family == 'Debian'
+
+- name: Force jenkins restart
+  meta: flush_handlers
+  tags: ['install']
+
+- name: Wait for jenkins to be up
+  uri:
+    url: "http://{{ ansible_host }}:8080/login"
+    follow_redirects: none
+    method: GET
+  register: _result
+  until: _result.status == 200
+  retries: 4 # 4 * 30 secondes = 2 minutes
+  delay: 30 # Every 30 seconds
+  tags: ['startup']
+
+- name: Add Jenkins User to Docker group
+  become: yes
+  user: 
+    name: jenkins
+    groups: docker
+    append: yes
+  tags: ['config']
+
+- name: Get admin password
+  become: yes
+  command: cat /var/lib/jenkins/secrets/initialAdminPassword
+  register: password_output
+  tags: ['admin']
+
+- name: print admin password
+  debug: 
+    msg: "{{ password_output.stdout }}"
+  tags: ['admin']

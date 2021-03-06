@@ -1,0 +1,33 @@
+---
+
+- name: Install dependencies
+  become: yes
+  apt:
+    update_cache: yes
+    state: latest
+    name: "{{ jenkins_dependencies }}"
+  tags: ['dependencies']
+
+- name: Add Jenkins official GPG key
+  become: yes
+  apt_key:
+    url: https://pkg.jenkins.io/debian-stable/jenkins.io.key
+    state: present
+    id: 62A9756BFD780C377CF24BA8FCEF32E745F2C3D5
+  tags: ['dependencies']
+
+- name: Add repository
+  become: yes
+  apt_repository:
+    repo: "deb https://pkg.jenkins.io/debian-stable binary/"
+    state: present
+  tags: ['dependencies']
+
+- name: Install Jenkins
+  become: yes
+  apt:
+    update_cache: yes
+    state: latest
+    name: jenkins
+  notify: restart jenkins
+  tags: ['install']

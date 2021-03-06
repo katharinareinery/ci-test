@@ -1,0 +1,9 @@
+---
+# handlers file for jenkins
+- name: restart jenkins
+  become: yes
+  service:
+    name: jenkins
+    state: restarted
+    enabled: yes
+  tags: ['restart', 'daemon']

@@ -1,0 +1,35 @@
+---
+# tasks file for docker
+
+- name: Install dependencies
+  become: yes
+  apt:
+    update_cache: yes
+    state: latest
+    name: "{{ docker_dependencies }}"
+  tags: ['dependencies']
+
+- name: Add Docker’s official GPG key
+  become: yes
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+    id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+  tags: ['dependencies']
+
+- name: Add repository
+  become: yes
+  apt_repository:
+    repo: "deb [arch={{ arch_map[ansible_architecture] }}] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable"
+    state: present
+  when: arch_map[ansible_architecture] in ['amd64', 'arm64', 'armv7', 'armv6']
+  tags: ['dependencies']
+
+- name: Install Docker Engine
+  become: yes
+  apt:
+    update_cache: yes
+    state: latest
+    name: "{{ docker_packages }}"
+  notify: restart docker daemon
+  tags: ['install']

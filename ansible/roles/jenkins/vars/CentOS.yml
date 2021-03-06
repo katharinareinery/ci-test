@@ -1,0 +1,3 @@
+---
+
+jenkins_dependencies: ['java-11-openjdk-devel', 'git']

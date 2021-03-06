@@ -1,0 +1,6 @@
+---
+- name: install jenkins
+  hosts: escrypt_test
+  gather_facts: yes
+  roles:
+    - jenkins

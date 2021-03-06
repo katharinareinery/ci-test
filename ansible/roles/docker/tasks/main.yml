@@ -1,0 +1,17 @@
+---
+
+- name: Load OS Specific Vars
+  # include_vars fügt Datei mit Namen der Zieldistribution hinzu
+  include_vars: "{{ lookup('first_found', possible_files) }}"
+  vars:
+    possible_files:
+      - "../vars/{{ ansible_distribution }}.yml"
+  tags: [ 'install', 'prepare' ]
+
+- include_tasks: docker-CentOS.yml
+  when:
+    - ansible_os_family == 'RedHat'
+
+- include_tasks: docker-Debian.yml
+  when:
+    - ansible_os_family == 'Debian'

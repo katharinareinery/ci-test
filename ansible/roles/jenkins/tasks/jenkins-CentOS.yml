@@ -1,0 +1,43 @@
+---
+
+- name: Install dependencies
+  become: yes
+  yum:
+    update_cache: yes
+    state: latest
+    name: "{{ jenkins_dependencies }}"
+  tags: ['dependencies']
+
+- name: Add Jenkins official GPG key
+  become: yes
+  rpm_key:
+    key: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+    state: present
+    fingerprint: 62A9756BFD780C377CF24BA8FCEF32E745F2C3D5
+  tags: ['dependencies']
+
+- name: Add repository
+  become: yes
+  yum_repository:
+    name: jenkins
+    description: Official Jenkins Repository
+    baseurl: "http://pkg.jenkins.io/redhat-stable"
+    state: present
+  tags: ['dependencies']
+
+- name: Install Jenkins
+  become: yes
+  yum:
+    update_cache: yes
+    state: latest
+    name: jenkins
+  notify: restart jenkins
+  tags: ['install']
+
+- name: Adjust the firewall
+  become: yes
+  ansible.posix.firewalld:
+    permanent: yes
+    state: enabled 
+    port:  8080/tcp
+  tags: ['firewall']

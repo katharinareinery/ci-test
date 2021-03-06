@@ -1,0 +1,7 @@
+ubuntu:
+  hosts:
+    escrypt_test:
+      ansible_host: 188.34.204.58
+      ansible_user: root
+      ansible_key: ~/.ssh/escrypt_key
+      ansible_port: 22

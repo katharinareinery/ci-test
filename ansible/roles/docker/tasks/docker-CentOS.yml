@@ -1,0 +1,27 @@
+---
+# tasks file for docker
+
+- name: Add Docker’s official GPG key
+  become: yes
+  rpm_key:
+    key: https://download.docker.com/linux/centos/gpg
+    state: present
+    fingerprint: 060A61C51B558A7F742B77AAC52FEB6B621E9F35
+  tags: ['dependencies']
+
+- name: Add repository
+  become: yes
+  yum_repository:
+    name: docker
+    description: Docker Yum repository
+    baseurl: "https://download.docker.com/linux/centos/$releasever/$basearch/stable"
+    state: present
+  tags: ['dependencies']
+
+- name: Install Docker Engine
+  become: yes
+  yum:
+    state: latest
+    name: "{{ docker_packages }}"
+  notify: restart docker daemon
+  tags: ['install']
