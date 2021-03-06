@@ -64,6 +64,7 @@ def prepareOneBuildStage(String name) {
           sh "rake tinyAES"
           sh "rake Unity"
           sh "rake ${name}.exe --trace"
+          sh "./${name}.exe"
       }
     }
   }
