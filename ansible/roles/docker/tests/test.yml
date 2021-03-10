@@ -3,6 +3,5 @@
   hosts: all
   gather_facts: True
   become: yes
-  connection: local
   roles:
     - ../../.

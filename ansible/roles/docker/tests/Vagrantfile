@@ -3,9 +3,10 @@
 
 Vagrant.configure("2") do |config|
     boxes = [
-      { :name => "ubuntu-hello-world-box", :box => "ubuntu/xenial64" },
-      { :name => "debian-hello-world-box", :box => "debian/stretch64" },
-      { :name => "centos-hello-world-box", :box => "geerlingguy/centos8" }
+      { :name => "ubuntu-18-box", :box => "ubuntu/bionic64" },
+      { :name => "ubuntu-20-box", :box => "ubuntu/focal64" },
+      { :name => "debian-box", :box => "debian/stretch64" },
+      { :name => "centos-box", :box => "geerlingguy/centos8" }
     ]
     boxes.each do |opts|
       config.vm.define opts[:name] do |config|
